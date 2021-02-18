@@ -1,0 +1,194 @@
+﻿
+@{
+    ViewData["Title"] = "Invoice List";
+    Layout = "~/Views/Shared/_POSLayout.cshtml";
+}
+
+<style>
+    .odd {
+        background-color: #b3ffff;
+    }
+
+    .even {
+        background-color: #b3b3ff;
+    }
+
+    #purchaseProductList tr, td {
+        text-align: center;
+    }
+
+    .rightAlign {
+        text-align: right;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div id="headingOne" class="card-header bg-blue1">
+                <button type="button" data-toggle="collapse" data-target="#advanceSearchPurchaseProductList" aria-expanded="true" class="text-left m-0 p-0 btn btn-block" style="box-shadow: none;">
+                    <h5 class="m-0 p-0" style="color: #fff;">Sales List</h5>
+                </button>
+            </div>
+            <div class="card-body">
+                <div id="advanceSearchPurchaseProductList" class="collapse show">
+                    <div class="row table-responsive">
+                        <table class="table table-hover table-bordered" id="purchaseProductList">
+                            <thead>
+                                <tr style="background-color:coral;">
+                                    <th>Invoice</th>
+                                    <th>Customer Name</th>
+                                    <th>Grand Total</th>
+                                    <th>Paid Amount</th>
+                                    <th>Dues</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot>
+                                <tr style="background-color: coral;">
+                                    <td></td>
+                                    <td></td>
+                                    <td id="grandTotal" class="rightAlign"></td>
+                                    <td id="paidAmount" class="rightAlign"></td>
+                                    <td id="duesAmount" class="rightAlign"></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+    (function () {
+        let ajaxOperation = new AjaxOperation();
+        let modalOperation = new ModalOperation();
+
+        let selector = {
+            purchaseProductList: $("#purchaseProductList"),
+            grandTotal: $("#grandTotal"),
+            paidAmount: $("#paidAmount"),
+            duesAmount: $("#duesAmount"),
+
+            printBtnSalesInvoiceReport: $("#printBtnSalesInvoiceReport"),
+            printSalesInvoiceReport: $("#printSalesInvoiceReport"),
+
+        };
+        function GeneratePurchaseProductList() {
+            var purchaseProductList = selector.purchaseProductList.dataTable({
+                "processing": true,
+                "serverSide": true,
+                "filter": true,
+                "pageLength": 10,
+                "autoWidth": false,
+                'dom': "<'row'<'col-sm-3'l><'col-sm-5 text-center'B><'col-sm-4'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                "lengthMenu": [[10, 50, 100, 150, 200, 500], [10, 50, 100, 150, 200, 500]],
+                "order": [[0, "desc"]],
+                "ajax": {
+                    "url": "/SalesInvoice/GetSalesInvoiceList/",
+                    "type": "POST",
+                    "data": function (data) {
+
+                    },
+                    "complete": function (json) {
+
+                    }
+                },
+                "columnDefs": [
+                    { "className": "rightAlign", "targets": [ 2, 3, 4 ] },
+                ],
+                "columns": [
+                    { "data": "invoiceNumber", "name": "invoiceNumber", "autowidth": true, "orderable": true },
+                    { "data": "customer.name", "name": "customer.name", "autowidth": true, "orderable": true},
+                    { "data": "grandTotal", "name": "grandTotal", "autowidth": true, "orderable": true},
+                    { "data": "paidAmount", "name": "paidAmount", "autowidth": true, "orderable": true},
+                    { "data": "dues", "name": "dues", "autowidth": true, "orderable": true},
+                    { "data": "createdDate", "name": "createdDate", "autowidth": true, "orderable": true},
+                    {
+                        "render": function (data, type, full, meta) {
+                            return `
+                                <div class="btn-group">
+                                    <i class="fa fa-ellipsis-h" title = 'Actions' style = 'cursor:pointer;' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                                  <div class="dropdown-menu" >
+                                    <button style="font-size: inherit;" class="dropdown-item btn-rx viewSalesInvoiceList"  invoiceNumber = "${full.invoiceNumber}" ><i class="fa fa-info-circle" aria-hidden="true"></i>View</button >
+                                    </div>
+                                </div>`;
+                            //<a style="font-size: inherit;" class="dropdown-item btn-rx" href="#" ><i class="fa fa-check-circle" aria-hidden="true"></i>Edit</a >
+                            //    <button style="font-size: inherit;" class="dropdown-item btn-rx" invoiceNumber="${full.invoiceNumber}"  > <i class="fa fa-times" aria-hidden="true"></i>Delete</button >
+
+                        }
+                    },
+                ],
+                "footerCallback": function (row, data, start, end, display) {
+                    var api = this.api(), data;
+                    var intVal = function (i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+
+                    let column2 = intVal;
+                    let column3 = intVal;
+                    let column4 = intVal;
+
+                    let grandTotal = api
+                        .column(2)
+                        .data()
+                        .reduce(function (a, b) {
+                            return column2(a) + column2(b);
+                        }, 0);
+
+                    let paidAmount = api
+                        .column(3)
+                        .data()
+                        .reduce(function (a, b) {
+                            return column3(a) + column3(b);
+                        }, 0);
+
+                    let duesAmount = api
+                        .column(4)
+                        .data()
+                        .reduce(function (a, b) {
+                            return column4(a) + column4(b);
+                        }, 0);
+
+                    $(api.column(2).footer()).html("= " + grandTotal + "/-");
+                    $(api.column(3).footer()).html("= " + paidAmount + "/-");
+                    $(api.column(4).footer()).html("= " + duesAmount + "/-");
+                }
+            });
+
+            selector.tableInformation = purchaseProductList;
+        }
+
+        window.onload = function () {
+            GeneratePurchaseProductList();
+        }
+
+        $(document).on("click", ".viewSalesInvoiceList", function () {
+            let invoiceNumber = $(this).attr("invoiceNumber");
+            let htmlData = ajaxOperation.GetAjaxHtmlByValue("/SalesInvoice/SalesInvoiceInformation", invoiceNumber);
+
+            $("#modalHeading").text("Invoice Details");
+            modalOperation.ModalStatic("#informationModal");
+            modalOperation.ModalOpenWithHtml("#informationModal", "#informationModalDiv", htmlData);
+        });
+
+        $(document).on("click", "#printBtnSalesInvoiceReport", function () {
+            printDiv("printSalesInvoiceReport");
+        });
+
+    })();
+    </script>
+}
+
