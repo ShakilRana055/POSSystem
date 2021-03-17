@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "G:\\POSSystem\\POSSystemWithInventory\\POSSystemWithInventory.csproj": {}
+    "G:\\Core\\POSSystemWithInventory\\POSSystemWithInventory\\POSSystemWithInventory.csproj": {}
   },
   "projects": {
-    "G:\\POSSystem\\POSSystemWithInventory\\POSSystemWithInventory.csproj": {
+    "G:\\Core\\POSSystemWithInventory\\POSSystemWithInventory\\POSSystemWithInventory.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\POSSystem\\POSSystemWithInventory\\POSSystemWithInventory.csproj",
+        "projectUniqueName": "G:\\Core\\POSSystemWithInventory\\POSSystemWithInventory\\POSSystemWithInventory.csproj",
         "projectName": "POSSystemWithInventory",
-        "projectPath": "G:\\POSSystem\\POSSystemWithInventory\\POSSystemWithInventory.csproj",
+        "projectPath": "G:\\Core\\POSSystemWithInventory\\POSSystemWithInventory\\POSSystemWithInventory.csproj",
         "packagesPath": "C:\\Users\\ShakilRana\\.nuget\\packages\\",
-        "outputPath": "G:\\POSSystem\\POSSystemWithInventory\\obj\\",
+        "outputPath": "G:\\Core\\POSSystemWithInventory\\POSSystemWithInventory\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ShakilRana\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -38,9 +38,13 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.4, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[5.0.1, )"
+              "version": "[5.0.4, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
@@ -60,7 +64,7 @@
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
-              "version": "[3.1.4, )"
+              "version": "[3.1.5, )"
             }
           },
           "imports": [

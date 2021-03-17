@@ -33,15 +33,11 @@
                                     <input asp-for="Name" class="form-control" />
                                     <span asp-validation-for="Name" class="text-danger"></span>
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="UserName" class="control-label"></label>
-                                    <input asp-for="UserName" class="form-control" />
-                                    <span asp-validation-for="UserName" class="text-danger"></span>
-                                </div>
+                                
                                 <div class="form-group">
                                     <label asp-for="Email" class="control-label"></label>
-                                    <input asp-for="Email" class="form-control" />
-                                    <span asp-validation-for="Email" autocomplete = "off" class="text-danger"></span>
+                                    <input asp-for="Email" class="form-control" autocomplete="off" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Password" class="control-label"></label>
@@ -81,9 +77,8 @@
                     <thead style="background-color: #ffd9b3;">
                         <tr>
                             <th>Name</th>
-                            <th>Credential</th>
+                            <th>Email</th>
                             <th>Photo</th>
-                            <th>Created Date</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -180,7 +175,7 @@
                         { "data": "name", "name": "name", "autowidth": true, "orderable": true },
                         {
                             "render": function(data, type, full, meta){
-                                return `${full.userName} <br/> ${full.email}`;
+                                return `${full.email}`;
                             }
                         },
                         {
@@ -188,31 +183,32 @@
                                 return `<img src = "${full.photoUrl}" alt = "None" height = "25" width = "25" />`;
                             }
                         },
-                        { "data": "createdDate", "name": "createdDate", "autowidth": true, "orderable": true },
                         {
                             "render": function (data, type, full, meta) {
-                                if(full.email !== "admin@gmail.com"){
-                                return`
-                                    <div class="btn-group">
-                                        <i class="fa fa-ellipsis-h" title = 'Actions' style = 'cursor:pointer;' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                                    <div class="dropdown-menu" >
-                                        <button style="font-size: inherit;" class="dropdown-item btn-rx viewAdminAccountInformation" supplierId = "${full.id}" ><i class="fa fa-info-circle" aria-hidden="true"></i>View</button >
-                                        <button style="font-size: inherit;" class="dropdown-item btn-rx editAdminAccountInformation" name = "${full.name}" email = "${full.email}" userName = "${full.userName}" createdDate = "${full.createdDate}" password = "${full.password}" adminAccountId = "${full.id}" ><i class="fa fa-check-circle" aria-hidden="true"></i>Edit</button >
-                                        <button style="font-size: inherit;" class="dropdown-item btn-rx deleteAdminAccountInformation" adminAccountId = "${full.id}" > <i class="fa fa-times" aria-hidden="true"></i>Delete</button >
-                                    </div>
-                                    </div>`;
-                                }
-                                else {
-                                    return `
-                                    <div class="btn-group">
-                                        <i class="fa fa-ellipsis-h" title = 'Actions' style = 'cursor:pointer;' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                                    <div class="dropdown-menu" >
-                                        <button style="font-size: inherit;" class="dropdown-item btn-rx viewAdminAccountInformation" supplierId = "${full.id}" ><i class="fa fa-info-circle" aria-hidden="true"></i>View</button >
-                                        <button style="font-size: inherit;" class="dropdown-item btn-rx editAdminAccountInformation" name = "${full.name}" email = "${full.email}" userName = "${full.userName}" createdDate = "${full.createdDate}" password = "${full.password}" adminAccountId = "${full.id}" ><i class="fa fa-check-circle" aria-hidden="true"></i>Edit</button >
+                                if (full.role === "Admin" && full.email !== "superadmin@gmail.com") {
+                                    return `<div class="btn-group">
+                                        <i class="fa fa-ellipsis-h" title='Actions' style='cursor:pointer;' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                                        <div class="dropdown-menu" >
+                                            <button style="font-size: inherit;" class="dropdown-item btn-rx viewAdminAccountInformation" adminAccountId="${full.id}" ><i class="fa fa-info-circle" aria-hidden="true"></i>View</button >
+                                            <button style="font-size: inherit;" class="dropdown-item btn-rx editAdminAccountInformation" name="${full.name}" email="${full.email}" adminAccountId="${full.id}" ><i class="fa fa-check-circle" aria-hidden="true"></i>Edit</button >
                                         </div>
                                     </div>`;
                                 }
-                                    
+                                else {
+                                    if (full.email === "superadmin@gmail.com") {
+                                        return "";
+                                    }
+                                    else {
+                                        return `<div class="btn-group">
+                                            <i class="fa fa-ellipsis-h" title='Actions' style='cursor:pointer;' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                                            <div class="dropdown-menu" >
+                                                <button style="font-size: inherit;" class="dropdown-item btn-rx viewAdminAccountInformation" adminAccountId="${full.id}" ><i class="fa fa-info-circle" aria-hidden="true"></i>View</button >
+                                                <button style="font-size: inherit;" class="dropdown-item btn-rx editAdminAccountInformation" name="${full.name}" email="${full.email}" adminAccountId="${full.id}" ><i class="fa fa-check-circle" aria-hidden="true"></i>Edit</button >
+                                                <button style="font-size: inherit;" class="dropdown-item btn-rx deleteAdminAccountInformation" adminAccountId="${full.id}" > <i class="fa fa-times" aria-hidden="true"></i>Delete</button >
+                                            </div>
+                                        </div>`;
+                                    }
+                                }
                             }
                         },
                     ]
@@ -248,7 +244,9 @@
                         let photo = selector.photo.get(0);
                         formData.append('Photo', photo.files);
 
-                        let data = ajaxOperation.SaveAjax("/User/AdminAccount", formData);
+                        //let data = ajaxOperation.SaveAjax("/User/AdminAccount", formData);
+                        let data = ajaxOperation.SaveAjax("/Account/RegisterUser", formData);
+                        console.log(data);
                         if (data === true) {
                             selector.tableInformation.fnFilter();
                             selector.supplierCreateForm[0].reset();
@@ -269,7 +267,7 @@
                     }
                 }
                 else {
-                    if (selector.password.val() !== "" && selector.confirmPassword.val() !== "") {
+                    if (selector.password.val() === "" && selector.confirmPassword.val() === "") {
                         let formData = new FormData(selector.supplierCreateForm[0]);
                         let photo = selector.photo.get(0);
                         formData.append('Photo', photo.files);
@@ -281,6 +279,8 @@
                             toastr.success('Successfully Updated!', 'success');
                             $(this).text("Save");
                             selector.email.removeAttr("readonly", true);
+                            selector.password.removeAttr("readonly", true);
+                            selector.confirmPassword.removeAttr("readonly", true);
                         }
                         else {
                             toastr.error('Something went wrong!', 'error');
@@ -311,7 +311,10 @@
                 let userName = $(this).attr("userName");
                 let password = $(this).attr("password");
                 let confirmPassword = $(this).attr("password");
+
                 selector.email.attr("readonly", true);
+                selector.password.attr("readonly", true);
+                selector.confirmPassword.attr("readonly", true);
 
                 ShowEditInformation(name, email, userName, password, confirmPassword);
                 selector.supplierCreateBtn.text("Update");

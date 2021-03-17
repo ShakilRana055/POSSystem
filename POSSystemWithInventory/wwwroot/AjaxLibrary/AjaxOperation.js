@@ -13,6 +13,7 @@ class AjaxOperation {
             contentType: false,
             success: function (response) {
                 data = response;
+                console.log(response + "some changes");
             }
         });
         return data;

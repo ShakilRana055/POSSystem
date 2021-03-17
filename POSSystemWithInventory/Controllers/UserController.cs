@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using POSSystemWithInventory.EntityModel;
 using POSSystemWithInventory.Models;
@@ -15,11 +16,13 @@ namespace POSSystemWithInventory.Controllers
     {
         private readonly IUnitOfWork context;
         private readonly IImageProcessing image;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public UserController(IUnitOfWork unitOfWork, IImageProcessing imageProcessing)
+        public UserController(IUnitOfWork unitOfWork, IImageProcessing imageProcessing, UserManager<ApplicationUser> userManager)
         {
             context = unitOfWork;
             image = imageProcessing;
+            this.userManager = userManager;
         }
         public IActionResult Index()
         {
@@ -408,6 +411,8 @@ namespace POSSystemWithInventory.Controllers
             AdminAccountVM adminAccount = new AdminAccountVM();
             return View(adminAccount);
         }
+
+        #region Deleted this
         [HttpPost]
         public IActionResult AdminAccount(AdminAccountVM adminAccountVM)
         {
@@ -442,45 +447,34 @@ namespace POSSystemWithInventory.Controllers
                 return Json(ex.Message);
             }
         }
-        public IActionResult AdminAccountUpdate(AdminAccountVM adminAccountVM)
+        #endregion
+        [HttpPost]
+        public async Task<IActionResult> AdminAccountUpdate(AdminAccountVM admin)
         {
-            try
+            var user = await userManager.FindByIdAsync(admin.Id);
+            if(user != null)
             {
-                var adminAccount = context.User.Find( x => x.Id == adminAccountVM.Id).FirstOrDefault();
-                if( adminAccount != null)
+                user.Name = admin.Name;
+                if(admin.Photo != null)
                 {
-                    adminAccount.Name = adminAccountVM.Name;
-                    adminAccount.Email = adminAccountVM.Email;
-                    adminAccount.UserName = adminAccountVM.UserName;
-                    adminAccount.Password = adminAccountVM.Password == "" ? adminAccount.Password : adminAccountVM.Password;
-                    
-
-                    if (adminAccountVM.Photo != null)
+                    var fileName = ContentDispositionHeaderValue.Parse(admin.Photo.ContentDisposition).FileName.Trim('"').Replace(" ", string.Empty);
+                    List<string> separate = fileName.Split(".").ToList();
+                    fileName = separate[0] + DateTime.Now.ToString("dddd_dd_MMMM_yyyy_HH_mm_ss") + "." + separate[1];
+                    string path = image.GetImagePath(fileName, "AdminAccount");
+                    using (var stream = new FileStream(path, FileMode.Create))
                     {
-                        var fileName = ContentDispositionHeaderValue.Parse(adminAccountVM.Photo.ContentDisposition).FileName.Trim('"').Replace(" ", string.Empty);
-                        List<string> separate = fileName.Split(".").ToList();
-                        fileName = separate[0] + DateTime.Now.ToString("dddd_dd_MMMM_yyyy_HH_mm_ss") + "." + separate[1];
-                        string path = image.GetImagePath(fileName, "AdminAccount");
-                        using (var stream = new FileStream(path, FileMode.Create))
-                        {
-                            adminAccountVM.Photo.CopyTo(stream);
-                        }
-                        adminAccount.PhotoUrl = image.GetImagePathForDb(path);
+                        admin.Photo.CopyTo(stream);
                     }
-                    context.Save();
+                    user.PhotoUrl = image.GetImagePathForDb(path);
+                }
+                var result = await userManager.UpdateAsync(user);
+                if (result.Succeeded)
                     return Json(true);
-                }
-                else
-                {
-                    return Json(false);
-                }
-                
             }
-            catch (Exception ex)
-            {
-                return Json(ex.Message);
-            }
+            return Json(false);
         }
+
+
         public IActionResult AdminAccountList()
         {
             var draw = Request.Form["draw"].FirstOrDefault();
@@ -494,8 +488,21 @@ namespace POSSystemWithInventory.Controllers
             int skip = start != null ? Convert.ToInt32(start) : 0;
             int recordsTotal = 0;
 
-            var adminAccountList = context.User.GetAll().ToList();
+            var adminList = userManager.Users.ToList();
+            var adminAccountList = new List<AdminAccountVM>();
 
+            foreach (var item in adminList)
+            {
+                var adminAccount = new AdminAccountVM()
+                {
+                    Name = item.Name,
+                    Email = item.Email,
+                    Id = item.Id,
+                    PhotoUrl = item.PhotoUrl,
+                    Role = User.Identity.Name == "superadmin@gmail.com" ? "Super Admin" : "Admin",
+                };
+                adminAccountList.Add(adminAccount);
+            }
             #region Filtering table data
             // searching 
             if (searchValue != null)
@@ -510,7 +517,6 @@ namespace POSSystemWithInventory.Controllers
                 }
                 catch (Exception ex)
                 {
-
                     throw ex;
                 }
 
@@ -529,9 +535,9 @@ namespace POSSystemWithInventory.Controllers
             //Returning Json Data    
             return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
         }
-        public IActionResult AdminAccountInformation(int search)
+        public async Task<IActionResult> AdminAccountInformation(string search)
         {
-            var userAccount = context.User.Find(x => x.Id == search).FirstOrDefault();
+            var userAccount = await userManager.FindByIdAsync(search);
             if(userAccount != null)
             {
                 AdminAccountVM adminAccountVM = new AdminAccountVM()
@@ -539,9 +545,7 @@ namespace POSSystemWithInventory.Controllers
                     Name = userAccount.Name,
                     Email = userAccount.Email,
                     UserName = userAccount.UserName,
-                    Password = userAccount.Password,
                     PhotoUrl = userAccount.PhotoUrl,
-                    CreatedDate = userAccount.CreatedDate,
                 };
                 return PartialView("_AdminAccountInformation", adminAccountVM);
             }
@@ -560,6 +564,19 @@ namespace POSSystemWithInventory.Controllers
         {
             var information = context.User.Find(item => item.HasLogged == true).FirstOrDefault();
             return Json(information);
+        }
+        public async Task<IActionResult> DeleteAdminAccount(string id)
+        {
+            var user = await userManager.FindByIdAsync(id);
+            if(user != null)
+            {
+                await userManager.DeleteAsync(user);
+                return Json(true);
+            }
+            else
+            {
+                return Json(false);
+            }
         }
         #endregion
     }
