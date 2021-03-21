@@ -1,0 +1,93 @@
+﻿@model POSSystemWithInventory.Models.BarcodeVM
+@{
+    ViewData["Title"] = "Generate Barcode";
+    Layout = "~/Views/Shared/_POSLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <form action="/Barcode/GenerateBarcode" method="post" enctype="multipart/form-data">
+            <div class="card">
+                <div id="headingOne" class="card-header bg-blue1">
+                    <button type="button" data-toggle="collapse" data-target="#Collapse" aria-expanded="true" class="text-left m-0 p-0 btn btn-block" style="box-shadow: none;">
+                        <h5 class="m-0 p-0" style="color: #fff;">Generate Barcode</h5>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="Collapse" class="collapse show">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="ProductId" class="control-label">Product Name</label>
+                                    <select class="form-control" asp-for="ProductId" asp-items="@Model.ProductItem">
+                                    </select>
+                                    <span asp-validation-for="ProductId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="NumberOfBarcode" class="control-label"></label>
+                                    <input asp-for="NumberOfBarcode" class="form-control" />
+                                    <span asp-validation-for="NumberOfBarcode" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Generate</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (ViewBag.generateClicked == true)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <form enctype="multipart/form-data">
+                <div class="card">
+                    <div id="headingOne" class="card-header bg-blue1">
+                        <button type="button" data-toggle="collapse" data-target="#Collapse" aria-expanded="true" class="text-left m-0 p-0 btn btn-block" style="box-shadow: none;">
+                            <h5 class="m-0 p-0" style="color: #fff;">Barcode</h5>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="Collapse" class="collapse show">
+                            <div class="row">
+                                <table class="table table-borderless">
+                                    <thead></thead>
+                                    <tbody>
+                                        @{
+                                            int barcodeNumber = Model.NumberOfBarcode;
+                                            int rowNumber = barcodeNumber / 5 + (barcodeNumber % 5 == 0 ? 0 : 1);
+                                            string url = "GetBarcode";
+                                            
+                                            for (int i = 0; i < rowNumber; i++)
+                                            {
+                                                <tr>
+                                                    @for (int j = 1; j < 5; j++)
+                                                    {
+                                                        <td>
+                                                            <img src="@Url.Action(url)" />
+                                                        </td>
+                                                    }
+                                                </tr>
+                                            }
+
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+}
+
+

@@ -375,6 +375,15 @@ G:\Core\POSSystemWithInventory\POSSystemWithInventory\bin\Debug\netcoreapp3.1\Mi
 G:\Core\POSSystemWithInventory\POSSystemWithInventory\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 G:\Core\POSSystemWithInventory\POSSystemWithInventory\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Core.dll
 G:\Core\POSSystemWithInventory\POSSystemWithInventory\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Stores.dll
+G:\Core\POSSystemWithInventory\POSSystemWithInventory\obj\Debug\netcoreapp3.1\Razor\Views\Account\Index.cshtml.g.cs
+G:\Core\POSSystemWithInventory\POSSystemWithInventory\obj\Debug\netcoreapp3.1\Razor\Views\Inventory\OrderableProduct.cshtml.g.cs
+G:\Core\POSSystemWithInventory\POSSystemWithInventory\bin\Debug\netcoreapp3.1\BarcodeStandard.dll
+G:\Core\POSSystemWithInventory\POSSystemWithInventory\bin\Debug\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
+G:\Core\POSSystemWithInventory\POSSystemWithInventory\bin\Debug\netcoreapp3.1\System.Drawing.Common.dll
+G:\Core\POSSystemWithInventory\POSSystemWithInventory\bin\Debug\netcoreapp3.1\System.Text.Json.dll
+G:\Core\POSSystemWithInventory\POSSystemWithInventory\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+G:\Core\POSSystemWithInventory\POSSystemWithInventory\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+G:\Core\POSSystemWithInventory\POSSystemWithInventory\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
 G:\Core\POSSystemWithInventory\POSSystemWithInventory\obj\Debug\netcoreapp3.1\POSSystemWithInventory.csproj.CoreCompileInputs.cache
 G:\Core\POSSystemWithInventory\POSSystemWithInventory\obj\Debug\netcoreapp3.1\POSSystemWithInventory.MvcApplicationPartsAssemblyInfo.cache
-G:\Core\POSSystemWithInventory\POSSystemWithInventory\obj\Debug\netcoreapp3.1\Razor\Views\Account\Index.cshtml.g.cs
+G:\Core\POSSystemWithInventory\POSSystemWithInventory\obj\Debug\netcoreapp3.1\Razor\Views\Barcode\GenerateBarcode.cshtml.g.cs

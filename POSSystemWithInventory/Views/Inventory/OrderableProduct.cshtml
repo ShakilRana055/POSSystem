@@ -1,0 +1,88 @@
+﻿
+@{
+    ViewData["Title"] = "Orderable Product";
+    Layout = "~/Views/Shared/_POSLayout.cshtml";
+}
+<style>
+    .odd {
+        background-color: #b3ffff;
+    }
+
+    .even {
+        background-color: #b3b3ff;
+    }
+    .centerAlign {
+        text-align: center;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div id="headingTwo" class="card-header bg-blue1">
+                <button type="button" data-toggle="collapse" data-target="#Collapse" aria-expanded="true" class="text-left m-0 p-0 btn btn-block" style="box-shadow: none;">
+                    <h5 class="m-0 p-0" style="color: #fff;">Orderable Product List</h5>
+                </button>
+            </div>
+            <div class="card-body table-responsive">
+                <table class="table table-hover table-bordered" id="orderableProductList">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Available Quantity</th>
+                            <th>Warning Quantity</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{ 
+<script>
+    (function () {
+        let selector = {
+            orderableProductList: $("#orderableProductList"),
+        };
+        function GenerateOrderable() {
+            var orderableProductList = selector.orderableProductList.dataTable({
+                "processing": true,
+                "serverSide": true,
+                "filter": true,
+                "pageLength": 10,
+                "autoWidth": false,
+                'dom': "<'row'<'col-sm-3'l><'col-sm-5 text-center'B><'col-sm-4'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                "lengthMenu": [[10, 50, 100, 150, 200, 500], [10, 50, 100, 150, 200, 500]],
+                "order": [[0, "desc"]],
+                "ajax": {
+                    "url": "/Inventory/OrderableProductList/",
+                    "type": "POST",
+                    "data": function (data) {
+
+                    },
+                    "complete": function (json) {
+
+                    }
+                },
+                "columnDefs": [
+                    { "className": "centerAlign", "targets": [0, 1, 2] },
+                ],
+                "columns": [
+                    { "data": "name", "name": "name", "autowidth": true, "orderable": true },
+                    { "data": "availableQuantity", "name": "availableQuantity", "autowidth": true, "orderable": true },
+                    { "data": "warningQuantity", "name": "description", "autowidth": true, "orderable": true },
+                   
+                ]
+            });
+        }
+
+
+        window.onload = function () {
+            GenerateOrderable();
+        }
+    })();
+</script>
+}

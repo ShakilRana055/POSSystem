@@ -22,5 +22,10 @@ namespace POSSystemWithInventory.RepositoryPattern.Repositories.GeneralRepositor
             var result = context.Inventory.Include(x => x.Product).ToList();
             return result;
         }
+        public IEnumerable<Inventory> OrderableProducts()
+        {
+            var result = context.Inventory.Include(x => x.Product).Where(x => x.AvailableQuantity <= x.Product.WarningQuantity).ToList();
+            return result;
+        }
     }
 }

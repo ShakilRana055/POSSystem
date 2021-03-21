@@ -216,5 +216,70 @@ namespace POSSystemWithInventory.Controllers
             return Json(dues);
         }
         #endregion
+
+        #region New Orderable Products
+        public IActionResult OrderableProduct()
+        {
+            return View();
+        }
+        public IActionResult OrderableProductList()
+        {
+            
+            var draw = Request.Form["draw"].FirstOrDefault();
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortColumnDir = Request.Form["order[0][dir]"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault().ToLower();
+
+            int pageSize = length != null ? Convert.ToInt32(length) : 0;
+            int skip = start != null ? Convert.ToInt32(start) : 0;
+            int recordsTotal = 0;
+
+            var getOrderableProduct = context.Inventory.OrderableProducts();
+            var orderableProduct = new List<OrderableProductVM>();
+
+            foreach (var item in getOrderableProduct)
+            {
+                var order = new OrderableProductVM()
+                {
+                    Name = item.Product.Name,
+                    AvailableQuantity = item.AvailableQuantity,
+                    WarningQuantity = item.Product.WarningQuantity,
+                    
+                };
+                orderableProduct.Add(order);
+            }
+            #region Filtering table data
+            // searching 
+            if (searchValue != null)
+            {
+                try
+                {
+                    var filteredAdminAccountList = orderableProduct.Where(
+                        x => x.Name.ToLower().Contains(searchValue)).ToList();
+                    orderableProduct = filteredAdminAccountList;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+            }
+
+            #endregion
+
+            var lists = orderableProduct.ToList();
+
+            //total number of rows count     
+            recordsTotal = lists.Count();
+
+            //Paging     
+            var data = lists.Skip(skip).Take(pageSize).ToList();
+
+            //Returning Json Data    
+            return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+        }
+        #endregion
     }
 }
