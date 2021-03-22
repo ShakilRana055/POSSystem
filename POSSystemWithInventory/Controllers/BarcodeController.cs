@@ -39,18 +39,24 @@ namespace POSSystemWithInventory.Controllers
             return View(barcodeVM);
         }
 
+        [HttpPost]
+        public IActionResult PrintBarcode(BarcodeVM barcodeVM)
+        {
+            return View(barcodeVM);
+        }
         public IActionResult GetBarcode(int productId)
         {
-            var productInfo = context.Product.Find(item => item.Id == productId).FirstOrDefault();
+            var inventory = context.Inventory.GetAllWithRelatedData().Where(item => item.ProductId == productId).FirstOrDefault();
             try
             {
+                
                 Barcode barcode = new Barcode();
-
-                barcode.AlternateLabel = "1234567890";
+                barcode.RawData = "Shakil";
+                barcode.AlternateLabel = "Price $" + inventory.SellPrice;
                 barcode.LabelPosition = LabelPositions.BOTTOMCENTER;
                 barcode.IncludeLabel = true;
 
-                Image image = barcode.Encode(TYPE.CODE39Extended, "12", Color.Black, Color.White, 200, 100);
+                Image image = barcode.Encode(TYPE.CODE128B, productId.ToString(), Color.Black, Color.White, 200, 100);
 
                 var data = ConvertImageToByte(image);
                 return File(data, "Barcode/png");

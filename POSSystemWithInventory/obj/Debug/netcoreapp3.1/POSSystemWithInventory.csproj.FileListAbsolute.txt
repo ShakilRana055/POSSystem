@@ -387,3 +387,4 @@ G:\Core\POSSystemWithInventory\POSSystemWithInventory\bin\Debug\netcoreapp3.1\ru
 G:\Core\POSSystemWithInventory\POSSystemWithInventory\obj\Debug\netcoreapp3.1\POSSystemWithInventory.csproj.CoreCompileInputs.cache
 G:\Core\POSSystemWithInventory\POSSystemWithInventory\obj\Debug\netcoreapp3.1\POSSystemWithInventory.MvcApplicationPartsAssemblyInfo.cache
 G:\Core\POSSystemWithInventory\POSSystemWithInventory\obj\Debug\netcoreapp3.1\Razor\Views\Barcode\GenerateBarcode.cshtml.g.cs
+G:\Core\POSSystemWithInventory\POSSystemWithInventory\obj\Debug\netcoreapp3.1\Razor\Views\Barcode\PrintBarcode.cshtml.g.cs

@@ -11,6 +11,7 @@ namespace POSSystemWithInventory.Models
         public BarcodeVM()
         {
             ProductItem = new List<SelectListItem>();
+            NumberOfBarcode = 1;
         }
         public List<SelectListItem> ProductItem { get; set; }
         public int ProductId { get; set; }

@@ -43,7 +43,6 @@ namespace POSSystemWithInventory
                 options.Password.RequiredUniqueChars = 1;
             }).AddEntityFrameworkStores<AppDbContext>();
 
-            
 
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IImageProcessing, ImageProcessing>();

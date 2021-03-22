@@ -1,0 +1,54 @@
+﻿@model POSSystemWithInventory.Models.BarcodeVM
+@{
+    ViewData["Title"] = "Print Barcode";
+    Layout = "~/Views/Shared/_POSLayout.cshtml";
+}
+
+
+<div class="row table-responsive">
+    <div id="printDiv" >
+        <button class="btn btn-success" id="printer">Print</button>
+    </div>
+    <table class="table table-borderless">
+        <thead></thead>
+        <tbody>
+            @{
+                int barcodeNumber = Model.NumberOfBarcode;
+                int rowNumber = barcodeNumber / 4 + (barcodeNumber % 4 == 0 ? 0 : 1);
+                string url = "GetBarcode/" + Model.ProductId;
+                int allCount = 0;
+
+                for (int i = 0; i < rowNumber; i++)
+                {
+                    <tr>
+                        @for (int j = 0; j < 4; j++)
+                        {
+                            if (allCount < barcodeNumber)
+                            {
+                                <td style="text-align:center">
+                                    <img src="@Url.Action("GetBarcode", "Barcode", new { productId = Model.ProductId })" />
+                                </td>
+                            }
+                            allCount++;
+
+                        }
+                    </tr>
+                }
+
+            }
+        </tbody>
+    </table>
+</div>
+@section Scripts{ 
+    <script>
+        $(document).ready(function () {
+
+            $("#printer").click(function () {
+                $("#printDiv").hide();
+                window.print();
+                $("#printDiv").show();
+            });
+        })
+    </script>
+
+}

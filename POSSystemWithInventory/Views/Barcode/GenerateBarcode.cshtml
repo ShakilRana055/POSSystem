@@ -6,7 +6,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <form action="/Barcode/GenerateBarcode" method="post" enctype="multipart/form-data">
+        <form action="/Barcode/PrintBarcode" method="post" enctype="multipart/form-data">
             <div class="card">
                 <div id="headingOne" class="card-header bg-blue1">
                     <button type="button" data-toggle="collapse" data-target="#Collapse" aria-expanded="true" class="text-left m-0 p-0 btn btn-block" style="box-shadow: none;">
@@ -34,7 +34,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Generate</button>
+                        <button type="submit" formtarget="_blank" class="btn btn-primary">Generate</button>
                     </div>
                 </div>
             </div>
@@ -42,36 +42,66 @@
     </div>
 </div>
 
-@if (ViewBag.generateClicked == true)
+@*@if (ViewBag.generateClicked == true)
 {
     <div class="row">
         <div class="col-md-12">
-            <form enctype="multipart/form-data">
+            <form enctype="multipart/form-data" asp-action="PrintBarcode" asp-controller="Barcode">
                 <div class="card">
                     <div id="headingOne" class="card-header bg-blue1">
-                        <button type="button" data-toggle="collapse" data-target="#Collapse" aria-expanded="true" class="text-left m-0 p-0 btn btn-block" style="box-shadow: none;">
+                        <button type="button" data-toggle="collapseBarcode" data-target="#Collapse" aria-expanded="true" class="text-left m-0 p-0 btn btn-block" style="box-shadow: none;">
                             <h5 class="m-0 p-0" style="color: #fff;">Barcode</h5>
                         </button>
+                        
                     </div>
                     <div class="card-body">
-                        <div id="Collapse" class="collapse show">
-                            <div class="row">
+                        <div id="collapseBarcode" class="collapse show">
+                            <button type="submit" formtarget="_blank" id="printBarcode" class="text-center btn btn-warning">
+                                Print
+                            </button>
+
+                            <div style="display:none;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="ProductId" class="control-label">Product Name</label>
+                                            <select class="form-control" asp-for="ProductId" asp-items="@Model.ProductItem">
+                                            </select>
+                                            <span asp-validation-for="ProductId" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="NumberOfBarcode" class="control-label"></label>
+                                            <input asp-for="NumberOfBarcode" class="form-control" />
+                                            <span asp-validation-for="NumberOfBarcode" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row table-responsive">
                                 <table class="table table-borderless">
                                     <thead></thead>
                                     <tbody>
                                         @{
                                             int barcodeNumber = Model.NumberOfBarcode;
-                                            int rowNumber = barcodeNumber / 5 + (barcodeNumber % 5 == 0 ? 0 : 1);
-                                            string url = "GetBarcode";
-                                            
+                                            int rowNumber = barcodeNumber / 4 + (barcodeNumber % 4 == 0 ? 0 : 1);
+                                            string url = "GetBarcode/" + Model.ProductId;
+                                            int allCount = 0;
+
                                             for (int i = 0; i < rowNumber; i++)
                                             {
                                                 <tr>
-                                                    @for (int j = 1; j < 5; j++)
+                                                    @for (int j = 0; j < 4; j++)
                                                     {
-                                                        <td>
-                                                            <img src="@Url.Action(url)" />
-                                                        </td>
+                                                        if (allCount < barcodeNumber)
+                                                        {
+                                                            <td style="text-align:center">
+                                                                <img src="@Url.Action("GetBarcode", "Barcode", new { productId = Model.ProductId })" />
+                                                            </td>
+                                                        }
+                                                        allCount++;
+
                                                     }
                                                 </tr>
                                             }
@@ -88,6 +118,17 @@
         </div>
 
     </div>
-}
+}*@
+
+@*@section Scripts{ 
+<script>
+    (function () {
+
+        $("#printBarcode").click(function () {
+            window.print();
+        })
+    })();
+</script>
+}*@
 
 
