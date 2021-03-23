@@ -25,7 +25,8 @@
                         {
                             if (allCount < barcodeNumber)
                             {
-                                <td style="text-align:center">
+                                <td style="text-align:center; background-color:white;">
+                                    <h6>@Model.ProductName</h6>
                                     <img src="@Url.Action("GetBarcode", "Barcode", new { productId = Model.ProductId })" />
                                 </td>
                             }

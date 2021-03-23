@@ -42,6 +42,8 @@ namespace POSSystemWithInventory.Controllers
         [HttpPost]
         public IActionResult PrintBarcode(BarcodeVM barcodeVM)
         {
+            var product = context.Product.Find(item => item.Id == barcodeVM.ProductId).FirstOrDefault();
+            barcodeVM.ProductName = product.Name;
             return View(barcodeVM);
         }
         public IActionResult GetBarcode(int productId)

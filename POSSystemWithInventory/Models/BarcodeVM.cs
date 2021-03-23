@@ -16,5 +16,6 @@ namespace POSSystemWithInventory.Models
         public List<SelectListItem> ProductItem { get; set; }
         public int ProductId { get; set; }
         public int NumberOfBarcode { get; set; }
+        public string ProductName { get; set; }
     }
 }
