@@ -209,6 +209,12 @@ namespace POSSystemWithInventory.Controllers
             salesInvoice.UpdatedBy = POSHelper.AmountInWords(salesInvoice.GrandTotal);
             return PartialView("_SalesInvoiceInformation", salesInvoice);
         }
+
+        public IActionResult PieChart()
+        {
+            var result = context.SalesInvoiceDetail.Top10PieChart();
+            return Json(result);
+        }
         #endregion
 
         #region Accounts Receivable

@@ -26,6 +26,27 @@ namespace POSSystemWithInventory.RepositoryPattern.Repositories.GeneralRepositor
                            .ToList();
             return response;
         }
+
+        public Dictionary<string, decimal> Top10PieChart()
+        {
+            var result = context.SalesInvoiceDetail
+                            .Select(item => item.ProductId)
+                            .Distinct()
+                            .ToList();
+            var storage = new Dictionary<string, decimal>();
+            foreach (var item in result)
+            {
+                var counting = context.SalesInvoiceDetail
+                                .Include(product => product.Product)
+                                .Where(x => x.ProductId == item)
+                                .ToList()
+                                .Sum(x => x.Quantity);
+                var getName = context.Product.FirstOrDefault(x => x.Id == item).Name;
+                storage.Add(getName, counting);
+            }
+            return storage;
+        }
+
         public Dictionary <SalesInvoiceDetail, decimal> Top10Sales()
         {
             Dictionary<SalesInvoiceDetail, decimal> result = new Dictionary<SalesInvoiceDetail, decimal>();

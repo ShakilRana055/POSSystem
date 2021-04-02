@@ -10,5 +10,6 @@ namespace POSSystemWithInventory.RepositoryPattern.Interfaces.GeneralInterface
     {
         public IEnumerable<SalesInvoiceDetail> GetAllWithRelatedData(string invoiceNumber);
         public Dictionary<SalesInvoiceDetail, decimal> Top10Sales();
+        public Dictionary<string, decimal> Top10PieChart();
     }
 }

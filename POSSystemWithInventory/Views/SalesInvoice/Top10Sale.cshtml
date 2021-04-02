@@ -17,7 +17,7 @@
 </style>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
         <div class="card">
             <div id="headingTwo" class="card-header bg-blue1">
                 <button type="button" data-toggle="collapse" data-target="#Collapse" aria-expanded="true" class="text-left m-0 p-0 btn btn-block" style="box-shadow: none;">
@@ -52,13 +52,72 @@
                                 </tr>
 
                                 count++;
-                             }
+                            }
                         }
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div id="headingTwo" class="card-header bg-blue1">
+                <button type="button" data-toggle="collapse" data-target="#Collapse" aria-expanded="true" class="text-left m-0 p-0 btn btn-block" style="box-shadow: none;">
+                    <h5 class="m-0 p-0" style="color: #fff;">Top 10 Sales</h5>
+                </button>
+            </div>
+            <div class="card-body table-responsive">
+                <canvas id="top10PieChart"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
 
+@section Scripts{
+    <script>
+        (function () {
+            let selector = {
+                label: [],
+                departmentCount: [],
+                backgroundColor: [],
+            }
+            let ajaxOperation = new AjaxOperation();
+
+            function ChartInformation() {
+                let response = ajaxOperation.GetAjax("/SalesInvoice/PieChart");
+                let backgroundColor = ['red', 'orange', 'yellow', 'green', 'brown', 'blue', 'purple', 'pink', 'teal', 'DarkOrange'];
+                let i = 0;
+                for (var item in response) {
+                    selector.label.push(item);
+                    selector.departmentCount.push(response[item]);
+                    selector.backgroundColor.push(backgroundColor[i++]);
+                }
+                Top10PieChart();
+            }
+
+            function Top10PieChart() {
+                var ctx = document.getElementById('top10PieChart').getContext('2d');
+                var chart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: selector.label,
+                        datasets: [{
+                            backgroundColor: selector.backgroundColor,
+                            data: selector.departmentCount,
+                        }]
+                    },
+                    options: {
+                        animation: {
+                            animateScale: true
+                        }
+                    }
+                });
+            }
+
+            window.onload = function () {
+                ChartInformation();
+            }
+        })();
+    </script>
+ }
 
