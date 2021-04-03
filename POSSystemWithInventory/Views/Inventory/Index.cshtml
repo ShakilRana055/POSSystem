@@ -431,21 +431,26 @@
             let sortedArray = [];
             sortedArray = process.QuickSortOneD(selector.selectedProduct);
             let search = process.BinarySearch(sortedArray, selector.productId.val());
-
-            if (sortedArray.length === 0) {
-                let data = process.AddEntryColumn();
-                selector.purchaseProductTBody.append(data);
-            }
-            else {
-                if (search === -1) {
+            if (selector.supplierId.val() !== "" && selector.productId.val() !== "") {
+                if (sortedArray.length === 0) {
                     let data = process.AddEntryColumn();
-                    let rowCount = selector.purchaseProductTBody.find("tr").length;
-                    rowCount > 0 ? $("#purchaseProductTBody tr:first").before(data) : selector.purchaseProductTBody.append(data);
+                    selector.purchaseProductTBody.append(data);
                 }
                 else {
-                    toastr.error('Already taken!.', 'Error!');
+                    if (search === -1) {
+                        let data = process.AddEntryColumn();
+                        let rowCount = selector.purchaseProductTBody.find("tr").length;
+                        rowCount > 0 ? $("#purchaseProductTBody tr:first").before(data) : selector.purchaseProductTBody.append(data);
+                    }
+                    else {
+                        toastr.error('Already taken!.', 'Error!');
+                    }
                 }
             }
+            else {
+                toastr.error('Please select Product or Supplier!.', 'Error!');
+            }
+            
             
         });
 
