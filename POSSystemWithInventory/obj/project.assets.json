@@ -8819,19 +8819,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ShakilRana\\.nuget\\packages\\": {}
+    "C:\\Users\\ahasa\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "G:\\Core\\POSSystemWithInventory\\POSSystemWithInventory\\POSSystemWithInventory.csproj",
+      "projectUniqueName": "C:\\Users\\ahasa\\OneDrive\\Desktop\\POS\\POSSystem\\POSSystemWithInventory\\POSSystemWithInventory.csproj",
       "projectName": "POSSystemWithInventory",
-      "projectPath": "G:\\Core\\POSSystemWithInventory\\POSSystemWithInventory\\POSSystemWithInventory.csproj",
-      "packagesPath": "C:\\Users\\ShakilRana\\.nuget\\packages\\",
-      "outputPath": "G:\\Core\\POSSystemWithInventory\\POSSystemWithInventory\\obj\\",
+      "projectPath": "C:\\Users\\ahasa\\OneDrive\\Desktop\\POS\\POSSystem\\POSSystemWithInventory\\POSSystemWithInventory.csproj",
+      "packagesPath": "C:\\Users\\ahasa\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ahasa\\OneDrive\\Desktop\\POS\\POSSystem\\POSSystemWithInventory\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\ShakilRana\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ahasa\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -8843,6 +8843,7 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
           "projectReferences": {}
         }
       },
@@ -8854,6 +8855,7 @@
     },
     "frameworks": {
       "netcoreapp3.1": {
+        "targetAlias": "netcoreapp3.1",
         "dependencies": {
           "BarcodeLib": {
             "target": "Package",
@@ -8906,7 +8908,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   }
