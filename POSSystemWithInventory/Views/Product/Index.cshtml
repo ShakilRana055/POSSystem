@@ -45,7 +45,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="WarningQuantity" class="control-label"></label>
-                                    <input asp-for="WarningQuantity" class="form-control" />
+                                    <input type="number" asp-for="WarningQuantity" class="form-control" />
                                     <span asp-validation-for="WarningQuantity" class="text-danger"></span>
                                 </div>
                             </div>
@@ -83,6 +83,7 @@
 
 @section Scripts{
     <script>
+
         (function () {
             let ajaxOperation = new AjaxOperation();
 
@@ -146,14 +147,20 @@
                 }
             });
 
+            function WarningQuantity() {
+                if (selector.warningQuantity.val() < 0) {
+                    toastr.error("Warning Quantity can't negative", "Error");
+                    return false;
+                }
+                return true;
+            }
 
             selector.brandCreateBtn.click(function () {
                 if ($(this).text() === "Save") {
-                    if (selector.productCreateForm.valid()) {
+                    if (selector.productCreateForm.valid() && WarningQuantity() === true) {
                         let formData = new FormData(selector.productCreateForm[0]);
                         let photo = selector.photo.get(0);
                         formData.append('Photo', photo.files);
-
                         let data = ajaxOperation.SaveAjax("/Product/Index", formData);
                         if (data === true) {
                             selector.productCreateForm[0].reset();

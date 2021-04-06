@@ -35,12 +35,12 @@
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Phone" class="control-label"></label>
-                                    <input asp-for="Phone" class="form-control" />
+                                    <input type="number" asp-for="Phone" class="form-control" />
                                     <span asp-validation-for="Phone" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Email" class="control-label"></label>
-                                    <input asp-for="Email" class="form-control" />
+                                    <input type="email" asp-for="Email" class="form-control" />
                                     <span asp-validation-for="Email" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
@@ -246,9 +246,31 @@
                 selector.designation.val(designation);
             }
 
+            function PhoneNumberChecker() {
+                let digits = "0123456789";
+                let phoneNumber = selector.phone.val();
+                if (phoneNumber.length > 11) {
+                    toastr.error("Phone number can't exceed 11 digit");
+                    return false;
+                }
+                let ok = true;
+                for (let i = 0; i < phoneNumber.length; i++) {
+                    let index = digits.indexOf(phoneNumber[i], 0);
+                    console.log(index);
+                    if (index !== -1)
+                        continue;
+                    else ok = false;
+                }
+                if (ok === false)
+                    toastr.error("Phone number contains only digit", "Error");
+                
+                return ok;
+            }
+
             selector.supplierCreateBtn.click(function () {
-                if($(this).text() === "Save"){
-                    if (selector.supplierCreateForm.valid()) {
+                if ($(this).text() === "Save") {
+
+                    if (selector.supplierCreateForm.valid() && PhoneNumberChecker() === true) {
                         let formData = new FormData(selector.supplierCreateForm[0]);
                         let photo = selector.photo.get(0);
                         formData.append('Photo', photo.files);

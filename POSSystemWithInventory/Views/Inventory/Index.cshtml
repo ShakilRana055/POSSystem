@@ -417,10 +417,34 @@
                 selector.paidAmount.val("");
                 selector.dues.text("");
             }
+
+            NegativeValueChecker(classsName) {
+                let ok = true;
+                $(classsName).each(function () {
+                    if ($(this).val() < 0)
+                        ok = false;
+                });
+                return ok;
+            }
+
+            ValidationAdded() {
+                if (selector.discountAmount.val() == '-') {
+                    toastr.error("Negative sign not allowed");
+                    selector.discountAmount.val("");
+                    return false;
+                }
+                if (selector.discountAmount.val() < 0 || selector.discountAmount.val() > 100) {
+                    toastr.error("Discount should in 0 to 100 range");
+                    selector.discountAmount.val("");
+                    return false;
+                }
+                return true;
+            }
         }
 
         let process = new Process();
         let loadingProcess = new OnloadProcess();
+
         window.onload = function () {
             let onloadProcess = new OnloadProcess();
             onloadProcess.GetInvoiceNumber();
@@ -460,13 +484,27 @@
         });
 
         $(document).on("keyup", selector.quantityInfo, function () {
-            let serialNumber = $(this).attr("serialNumber");
-            process.MultipleTask(serialNumber);
+            if ($(this).val() >= 1) {
+                let serialNumber = $(this).attr("serialNumber");
+                process.MultipleTask(serialNumber);
+            }
+            else {
+                toastr.error("Quantity can't negative", "Error");
+                $(this).val("");
+            }
+           
         });
 
         $(document).on("keyup", selector.purchasePriceInfo, function () {
-            let serialNumber = $(this).attr("serialNumber");
-            process.MultipleTask(serialNumber);
+            if ($(this).val() >= 1) {
+                let serialNumber = $(this).attr("serialNumber");
+                process.MultipleTask(serialNumber);
+            }
+            else {
+                toastr.error("Purchase price can't negative", "Error");
+                $(this).val("");
+            }
+            
         });
 
         $(document).on("change", selector.vatAndTaxInfo, function () {
@@ -475,25 +513,34 @@
         });
 
         selector.discountAmount.keyup(function () {
-            let discountAmount = $(this).val();
-            let subTotal = selector.subTotal.text();
-            let discount = process.CalculateDiscount(subTotal, discountAmount);
-            selector.grandTotal.text(discount);
-            selector.paidAmount.val(discount);
+            if (process.ValidationAdded() === true) {
+                let discountAmount = $(this).val();
+                let subTotal = selector.subTotal.text();
+                let discount = process.CalculateDiscount(subTotal, discountAmount);
+                selector.grandTotal.text(discount);
+                selector.paidAmount.val(discount);
+            }
         });
 
         selector.paidAmount.keyup(function () {
-            let grandTotal = Number(selector.grandTotal.text());
-            let paidAmount = $(this).val();
-            let decrement = grandTotal - paidAmount;
-            if (decrement < 0) {
-                toastr.error("Invalid Paid Amount!", "Error!");
-                $(this).val(grandTotal);
-                selector.dues.text(0);
+            if ($(this).val() >= 0) {
+                let grandTotal = Number(selector.grandTotal.text());
+                let paidAmount = $(this).val();
+                let decrement = grandTotal - paidAmount;
+                if (decrement < 0) {
+                    toastr.error("Invalid Paid Amount!", "Error!");
+                    $(this).val(grandTotal);
+                    selector.dues.text(0);
+                }
+                else {
+                    selector.dues.text(decrement.toFixed(2));
+                }
             }
             else {
-                selector.dues.text(decrement.toFixed(2));
+                toastr.error("Paid Amount can't negative", "Error");
+                $(this).val(0);
             }
+            
         });
 
         $(document).on("click", selector.deleteInfo, function () {
@@ -524,7 +571,15 @@
         });
         selector.purchaseResetBtn.click(function () {
             process.ResetAll();
-        })
+        });
+
+        $(document).on("keyup", selector.sellPriceInfo, function () {
+            if ($(this).val() <= 0) {
+                toastr.error("Sell Price Can't negative");
+                $(this).val("");
+            }
+            
+        });
     })();
 </script>
 }

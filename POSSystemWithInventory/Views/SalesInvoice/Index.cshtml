@@ -86,7 +86,7 @@
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                 </div>
-                                                <input type="number" class="form-control rightAlign" id="discountAmount" >
+                                                <input type="number" min="0" max="100" class="form-control rightAlign" id="discountAmount" >
                                                 <div class="input-group-append">
                                                     <span class="input-group-text"><b>%</b></span>
                                                 </div>
@@ -105,7 +105,7 @@
                                     </tr>
                                     <tr style="font-weight: 900;color: black;">
                                         <td colspan="3" align="right">Paid Amount</td>
-                                        <td><input type="number" class="form-control rightAlign" id="paidAmount" /></td>
+                                        <td><input type="number" min="0" class="form-control rightAlign" id="paidAmount" /></td>
                                         <td>
                                             <select class="form-control" id="paymentMode">
                                                 <option value="Cash">Cash</option>
@@ -224,7 +224,7 @@
                             </td>
                             <td>
                                 <div class="input-group">
-                                    <input type="text" class="form-control priceInfo rightAlign" style = "border:none;" serialNumber="${selector.serialNumber}" value="${price}" readonly>
+                                    <input type="text" class="form-control priceInfo rightAlign" type = "number" style = "border:none;" serialNumber="${selector.serialNumber}" value="${price}" readonly>
                                 </div>
                             </td>
                             <td>
@@ -366,6 +366,7 @@
                 let item = selector.bonusPointStorage.find(x => x.id === Number(customerId));
                 return item.bonusPoint;
             }
+
         }
         let onloadProcess = new OnloadProcess();
         let process = new Process();
@@ -466,7 +467,18 @@
         });
 
         selector.discountAmount.keyup(function () {
-            process.MultipleTask();
+            if ($(this).val() > 0) {
+                if ($(this).val() > 100) {
+                    toastr.error("Discount Amount can't cross 100");
+                    $(this).val("");
+                }
+                else
+                    process.MultipleTask();
+            }
+            else {
+                toastr.error("Error in Discount Amount", "Error");
+                $(this).val("");
+            }
         });
         selector.vatAndTaxId.change(function () {
             process.MultipleTask();
@@ -475,7 +487,7 @@
         selector.paidAmount.keyup(function () {
             let paidAmount = Number($(this).val());
             let grandTotal = Number(selector.grandTotal.text());
-            if (paidAmount <= grandTotal) {
+            if (paidAmount <= grandTotal && paidAmount >= 0) {
                 selector.dues.text((grandTotal - paidAmount).toFixed(2));
             }
             else {
@@ -520,6 +532,12 @@
                 process.MultipleTask();
             }
         });
+
+        $(document).on("keyup", selector.priceInfo, function () {
+            let number = $(this).val();
+            if (number <= 0)
+                $(this).val("");
+        })
 
     })();
 </script>

@@ -6,7 +6,6 @@ function printDiv(divName) {
     document.body.innerHTML = printContents;
     window.print();
     document.body.innerHTML = originalContents;
-    document.location.reload(true);
 }
 
 // This one perfectly working [100% working]
