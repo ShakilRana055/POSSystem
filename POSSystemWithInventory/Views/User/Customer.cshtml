@@ -140,42 +140,19 @@
                     Name: {
                         required: true,
                     },
-                    Email: {
-                        required: true
-                    },
-                    Address: {
-                        required: true,
-                    },
-                    NID: {
-                        required: true
-                    },
-                    Photo: {
-                        required: true
-                    },
+                   
+                   
                     Phone: {
                         required: true
-                    },
-                    Designation: {
-                        required: true
-                    },
-                    CompanyName:{
-                        required: true
-                    },
-                    Profession: {
-                        required: true
                     }
+                   
                 },
                 // Specify validation error messages
                 messages: {
                     Name: "Name Field is required",
-                    Email: "Email Field is required",
-                    Address: "Address Field is required",
-                    NID: "NID info is required",
-                    Photo: "Must Include a photo",
-                    Phone: "Phone number is required",
-                    Designation: "Designation is required",
-                    CompanyName: "Company name is required",
-                    Profession: "Profession is required",
+                   
+                    Phone: "Phone number is required"
+                   
                 },
                 // Make sure the form is submitted to the destination defined
                 // in the "action" attribute of the form when valid
@@ -226,8 +203,9 @@
                                 if(full.photoUrl !== ""){
                                     return `<img src = "${full.photoUrl}" width = "20" height = "20" alt = "None"/>`;
                                 }
-                                else{
-                                    return "";
+                                else {
+                                    console, log("Here");
+                                    return `<img src = "~/female.jpg" width = "20" height = "20" />`;
                                 }
                             }
                         },
@@ -253,6 +231,7 @@
                 });
                 selector.tableInformation = supplierList;
             }
+            
 
             function ShowEditInformation(name, email, address, nid, phone, companyName, designation, profession){
                 selector.name.val(name);
